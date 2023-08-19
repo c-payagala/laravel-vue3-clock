@@ -59,11 +59,11 @@
         return userSetting.value.clock_offset < 0 ? "-" + formatted : formatted;
     }
 
-    const saveUserSetting = async () => {
+    const saveUserSetting = async (val=null) => {
         console.log('save');
         await storeUserSettings({
             //user_id: usePage().props.auth.user.id,
-            clock_offset: '60'
+            clock_offset: val === null ? userSetting.value.clock_offset : val
         });
 
         if (errors.value.length > 0) {
@@ -97,7 +97,9 @@
 <template>
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-2">
         <h1 class="text-2xl text-white">Current Time Offset: {{ offsetFormatted() }}</h1>
-        <button class="button" @click="saveUserSetting">Save</button>
+        <button class="m-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="saveUserSetting(0)">
+            Clear Offset
+        </button>
     </div>
 
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-20">
