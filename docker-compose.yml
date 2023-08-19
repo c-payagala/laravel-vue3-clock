@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  app:
+    container_name: App
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+#    command: 'php artisan serve --host=0.0.0.0'
+    volumes:
+      - ./app:/app
+    ports:
+      - 80:8000
+      - 5173:5173
+
+  db:
+    platform: linux/x86_64
+    image: mysql:8.0
+    container_name: Database
+    environment:
+      MYSQL_DATABASE: "laravel"
+      MYSQL_USER: "laravel"
+      MYSQL_ROOT: "root"
+      MYSQL_PASSWORD: "pass"
+      MYSQL_ROOT_PASSWORD: "toor"
+    volumes:
+      - dbdata1:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: MailPit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  dbdata1:
