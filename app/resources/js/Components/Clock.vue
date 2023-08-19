@@ -23,7 +23,9 @@
         await getUserSettings();
 
         if (errors.value.length > 0) {
-            notify(errors.value);
+            notify(errors.value, 'error');
+        } else {
+            notify('Settings loaded!');
         }
     });
 
@@ -54,11 +56,25 @@
             .join(":");
     }
 
-    const notify = (message) => {
+    const saveUserSetting = async () => {
+        console.log('save');
+        await storeUserSettings({
+            //user_id: usePage().props.auth.user.id,
+            clock_offset: '60'
+        });
+
+        if (errors.value.length > 0) {
+            notify(errors.value, 'error');
+        } else {
+            notify('Settings saved!');
+        }
+    }
+
+    const notify = (message, type = 'info') => {
         toast(message, {
             autoClose: 1000,
             theme: 'dark',
-            type: 'error',
+            type: type,
         });
     }
 
@@ -68,7 +84,7 @@
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-2">
         {{ userSetting?.clock_offset !== undefined ? userSetting?.clock_offset : 'Error loading settings' }}
          - {{ offsetFormatted() }} -
-        <button class="button" @click="notify">notify</button>
+        <button class="button" @click="saveUserSetting">Save</button>
     </div>
 
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-20">
