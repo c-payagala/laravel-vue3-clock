@@ -46,14 +46,17 @@
 
     const offsetFormatted = () => {
         let seconds = userSetting.value.clock_offset;
-        const hours = Math.floor(seconds / 3600);
+        const hours = Math.floor(Math.abs(seconds) / 3600);
         seconds %= 3600;
-        const minutes = Math.floor(seconds / 60);
+        const minutes = Math.floor(Math.abs(seconds) / 60);
         seconds %= 60;
+        seconds = Math.abs(seconds);
 
-        return [hours, minutes, seconds]
+        const formatted =  [hours, minutes, seconds]
             .map(v => v < 10 ? "0" + v : v)
             .join(":");
+
+        return userSetting.value.clock_offset < 0 ? "-" + formatted : formatted;
     }
 
     const saveUserSetting = async () => {
@@ -70,6 +73,17 @@
         }
     }
 
+    const adjustOffset = (seconds) => {
+        console.log('adjust');
+
+        userSetting.value.clock_offset += seconds;
+
+        //await storeUserSettings({
+        //    //user_id: usePage().props.auth.user.id,
+        //    clock_offset: '60'
+        //});
+    }
+
     const notify = (message, type = 'info') => {
         toast(message, {
             autoClose: 1000,
@@ -82,8 +96,7 @@
 
 <template>
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-2">
-        {{ userSetting?.clock_offset !== undefined ? userSetting?.clock_offset : 'Error loading settings' }}
-         - {{ offsetFormatted() }} -
+        <h1 class="text-2xl text-white">Current Time Offset: {{ offsetFormatted() }}</h1>
         <button class="button" @click="saveUserSetting">Save</button>
     </div>
 
@@ -106,6 +119,12 @@
                 <div class="absolute inset-0 flex items-center">
                     <div class="h-px w-full bg-black"></div>
                 </div>
+
+                <!-- buttons to adjust offset -->
+                <div class="absolute inset-0 flex items-end">
+                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(60*60)">+</button>
+                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-60*60)">-</button>
+                </div>
             </div>
 
             <!-- minutes -->
@@ -122,6 +141,12 @@
                 <div class="absolute inset-0 flex items-center">
                     <div class="h-px w-full bg-black"></div>
                 </div>
+
+                <!-- buttons to adjust offset -->
+                <div class="absolute inset-0 flex items-end">
+                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(60)">+</button>
+                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-60)">-</button>
+                </div>
             </div>
 
             <!-- seconds -->
@@ -137,6 +162,12 @@
                 <!-- line across the middle -->
                 <div class="absolute inset-0 flex items-center">
                     <div class="h-px w-full bg-black"></div>
+                </div>
+
+                <!-- buttons to adjust offset -->
+                <div class="absolute inset-0 flex items-end">
+                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(1)">+</button>
+                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-1)">-</button>
                 </div>
             </div>
 
