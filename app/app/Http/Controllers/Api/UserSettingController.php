@@ -3,48 +3,44 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserSettingRequest;
+use App\Http\Resources\UserSettingResource;
 use App\Models\UserSetting;
-use Illuminate\Http\Request;
 
 class UserSettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
+    /*
+     * Update or create user setting of the authenticated user
+     *
+     * @param UserSettingRequest $request
+     * @return UserSettingResource
      */
-    public function index()
+    public function store(UserSettingRequest $request): UserSettingResource
     {
-        //
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->user()->id;
+        $userSetting = UserSetting::updateOrCreate(['user_id' => auth()->user()->id], $validated);
+        return new UserSettingResource($userSetting);
     }
 
-    /**
-     * Store a newly created resource in storage.
+    /*
+     * Show user settings of the authenticated user
+     *
+     * @return UserSettingResource
+     *
      */
-    public function store(Request $request)
+    public function show(): UserSettingResource
     {
-        //
+        $userSetting = UserSetting::firstOrCreate(
+            ['user_id' => auth()->user()->id],
+            ['clock_offset' => 0]
+        );
+        return new UserSettingResource($userSetting);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserSetting $userSetting)
+    /* public function destroy(UserSetting $userSetting)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserSetting $userSetting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserSetting $userSetting)
-    {
-        //
-    }
+        $userSetting->delete();
+        return response()->noContent();
+    } */
 }

@@ -14,6 +14,11 @@ class UserSettingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+
+        unset($data['created_at']);
+        unset($data['updated_at']);
+
+        return $data;
     }
 }
