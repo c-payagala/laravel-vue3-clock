@@ -1,15 +1,30 @@
 <script setup>
-    import { ref, onMounted, onUnmounted } from 'vue';
+    import {ref, onMounted, onUnmounted, watchEffect} from 'vue';
     import moment from 'moment';
+    import { usePage } from '@inertiajs/vue3';
+    import { toast } from 'vue3-toastify';
+    import 'vue3-toastify/dist/index.css';
+
+    import useCompanies from '@/Composables/userSettings'
+
+    const { errors, userSetting, getUserSettings, storeUserSettings } = useCompanies();
 
     const time = ref(moment());
     const interval = ref(null);
 
-    onMounted(() => {
+    onMounted(async () => {
         console.log('mounted');
+
         interval.value = setInterval(() => {
-            time.value = moment();
+            //time.value = moment();
+            time.value = moment().add(userSetting.value.clock_offset, 'seconds');
         }, 1000);
+
+        await getUserSettings();
+
+        if (errors.value.length > 0) {
+            notify(errors.value);
+        }
     });
 
     onUnmounted(() => {
@@ -27,9 +42,34 @@
         return time.value.format('ss');
     };
 
+    const offsetFormatted = () => {
+        let seconds = userSetting.value.clock_offset;
+        const hours = Math.floor(seconds / 3600);
+        seconds %= 3600;
+        const minutes = Math.floor(seconds / 60);
+        seconds %= 60;
+
+        return [hours, minutes, seconds]
+            .map(v => v < 10 ? "0" + v : v)
+            .join(":");
+    }
+
+    const notify = (message) => {
+        toast(message, {
+            autoClose: 1000,
+            theme: 'dark',
+            type: 'error',
+        });
+    }
+
 </script>
 
 <template>
+    <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-2">
+        {{ userSetting?.clock_offset !== undefined ? userSetting?.clock_offset : 'Error loading settings' }}
+         - {{ offsetFormatted() }} -
+        <button class="button" @click="notify">notify</button>
+    </div>
 
     <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-20">
         <!-- flip clock container -->
