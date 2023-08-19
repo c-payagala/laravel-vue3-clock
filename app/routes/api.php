@@ -19,4 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('user_settings', UserSettingController::class);
+// User Settings
+Route::middleware('auth:sanctum')->group(function () {
+    Route::controller(UserSettingController::class)->group(function () {
+        Route::get('/user_settings', 'show')->name('user_settings.show');
+        Route::post('/user_settings', 'store')->name('user_settings.store');
+    });
+});
