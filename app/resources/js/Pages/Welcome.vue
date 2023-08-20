@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import Register from "@/Pages/Auth/Register.vue";
 
 defineProps({
     canLogin: {
@@ -64,31 +65,40 @@ defineProps({
                 </svg>
             </div>
 
-            <div class="mt-16">
-                <Link
+            <div class="text-white text-center py-4 shadow-md mt-8 mb-4">
+                <h1 class="text-2xl font-bold uppercase tracking-wide">Clock made with Laravel + VueJS </h1>
+            </div>
+
+
+            <div class="mt-16 flex justify-center w-full gap-x-12">
+                <button
                     v-if="$page.props.auth.user"
-                    :href="route('dashboard')"
-                    class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                >Dashboard</Link
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    @click="$inertia.visit(route('dashboard'))"
                 >
+                    Go to Dashboard
+                </button>
 
                 <template v-else>
-                    <Link
-                        :href="route('login')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                    >Log in</Link
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        @click="$inertia.visit(route('login'))"
                     >
+                        Log in
+                    </button>
 
-                    <Link
+                    <button
                         v-if="canRegister"
-                        :href="route('register')"
-                        class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                    >Register</Link
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        @click="$inertia.visit(route('register'))"
                     >
+                        Register
+                    </button>
                 </template>
             </div>
 
-            <div class="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
+
+            <div class="flex justify-center mt-16 px-6 sm:items-center sm:justify-between gap-x-12">
                 <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-left">
                     <div class="flex items-center gap-4">
                         <a
