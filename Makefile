@@ -3,7 +3,7 @@
 # Variables
 DC=docker-compose exec app
 
-.PHONY: install test test-filter test-ui migrate migrate-refresh npm-install npm-install-dev npm-dev npm-build
+.PHONY: install up down test test-filter test-ui migrate migrate-refresh npm-install npm-install-dev npm-dev npm-build
 
 ## Setup project
 install:
