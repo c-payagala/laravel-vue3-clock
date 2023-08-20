@@ -26,14 +26,19 @@
 ### Installation
 
 1. Clone the repository
-2. Install docker and docker-compose
-3. Change directory to the project root e.g. `cd laravel-vue3-clock`
-4. Copy the `.env.example` file to `.env`. Run `cp app/.env.example app/.env`
-4. Run `docker-compose up -d`
-5. Navigate to http://localhost in your browser
+2. Install `docker` and `docker-compose`
+3. Install `Composer`
+4. Change directory to the project root e.g. `cd laravel-vue3-clock`
+5. Run `make install` to install the dependencies
+6. Run `make up` to build and start the containers
+7. **IMPORTANT: Give the containers a few minutes to build & start up on the first run.**
+8. Run `make migrate` to run the database migrations for the first time
+9. All Set! Navigate to http://localhost in your browser
+10. Register as a new user and access the dashboard
 
 #### Development
 
+- Run `make up` and `make down` to start & stop containers
 - Run `make npm-dev` to run the vite in watch mode
 - See the ***Makefile*** for other useful commands
 
