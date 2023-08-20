@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserSettingRequest;
 use App\Http\Resources\UserSettingResource;
 use App\Models\UserSetting;
+use App\Services\UserSettingService;
 
 class UserSettingController extends Controller
 {
@@ -15,12 +16,9 @@ class UserSettingController extends Controller
      * @param UserSettingRequest $request
      * @return UserSettingResource
      */
-    public function store(UserSettingRequest $request): UserSettingResource
+    public function store(UserSettingRequest $request, UserSettingService $userSettingService): UserSettingResource
     {
-        $validated = $request->validated();
-        $validated['user_id'] = auth()->user()->id;
-        $userSetting = UserSetting::updateOrCreate(['user_id' => auth()->user()->id], $validated);
-        return new UserSettingResource($userSetting);
+        return new UserSettingResource($userSettingService->store($request->validated()));
     }
 
     /*
@@ -29,13 +27,9 @@ class UserSettingController extends Controller
      * @return UserSettingResource
      *
      */
-    public function show(): UserSettingResource
+    public function show(UserSettingService $userSettingService): UserSettingResource
     {
-        $userSetting = UserSetting::firstOrCreate(
-            ['user_id' => auth()->user()->id],
-            ['clock_offset' => 0]
-        );
-        return new UserSettingResource($userSetting);
+        return new UserSettingResource($userSettingService->fetch());
     }
 
     /* public function destroy(UserSetting $userSetting)
