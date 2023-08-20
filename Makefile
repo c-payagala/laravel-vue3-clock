@@ -11,7 +11,11 @@ install:
 
 ## Bring up docker
 up:
-	docker-compose up -d && $(DC) php artisan migrate
+	docker-compose up -d
+
+## Bring down docker
+down:
+	docker-compose stop
 
 ## Run PHPUnit tests
 test:
