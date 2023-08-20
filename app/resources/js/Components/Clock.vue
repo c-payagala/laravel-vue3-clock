@@ -13,6 +13,8 @@
     const time = ref(moment());
     const interval = ref(null);
 
+    const emit = defineEmits(['adjustOffset']);
+
     onMounted(async () => {
         console.log('mounted', userSetting.value.clock_offset);
 
@@ -50,10 +52,9 @@
 
     const adjustOffset = async (seconds) => {
         console.log('adjust');
-
         userSetting.value.clock_offset += seconds;
-
-        await saveUserSetting(null, notify);
+        emit('adjustOffset', userSetting.value.clock_offset);
+        saveUserSetting(null, notify);
     }
 
     const clearOffset = () => {
