@@ -1,45 +1,48 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import {useSettingsStore} from "@/stores/settings.js";
+import {storeToRefs} from "pinia";
+import debounce from "lodash/debounce.js";
 
 export default function useUserSettings() {
-    const userSetting = ref({clock_offset: 0});
 
-    const errors = ref('');
+    const settingsStore = useSettingsStore();
 
-    const getUserSettings = async () => {
-        errors.value = '';
-        try {
-            let response = await axios.get(`/api/user_settings`);
-            console.log(response.data.data);
-            userSetting.value = response.data.data;
-        } catch (e) {
-            console.log(e.response.data.message);
-            errors.value = e.response.data.message;
+    const { userSetting, errors} = storeToRefs(settingsStore);
+
+    const saveUserSetting = debounce(async (val = null , callback) => {
+        console.log('save');
+        await settingsStore.storeUserSettings({
+            //user_id: usePage().props.auth.user.id,
+            clock_offset: val === null ? userSetting.value.clock_offset : val
+        });
+
+        if (errors.value.length > 0) {
+            callback(errors.value, 'error');
+        } else {
+            callback(val === 0 ? 'Settings cleared!' : 'Settings saved!');
         }
+    }, 1000);
 
-    }
+    const offsetFormatted = () => {
+        let seconds = userSetting.value.clock_offset;
+        const hours = Math.floor(Math.abs(seconds) / 3600);
+        seconds %= 3600;
+        const minutes = Math.floor(Math.abs(seconds) / 60);
+        seconds %= 60;
+        seconds = Math.abs(seconds);
 
-    const storeUserSettings = async (data) => {
-        errors.value = '';
-        try {
-            const response = await axios.post('/api/user_settings', data);
-            console.log(response.data.data);
-            userSetting.value = response.data.data;
-        } catch (e) {
-            if (e.response.status === 422) {
-                for (const key in e.response.data.errors) {
-                    errors.value = e.response.data.errors;
-                }
-            } else {
-                errors.value = e.response.data.message;
-            }
-        }
+        const formatted =  [hours, minutes, seconds]
+            .map(v => v < 10 ? "0" + v : v)
+            .join(":");
+
+        return userSetting.value.clock_offset < 0 ? "-" + formatted : formatted;
     }
 
     return {
         errors,
         userSetting,
-        getUserSettings,
-        storeUserSettings
+        getUserSettings: settingsStore.getUserSettings,
+        saveUserSetting,
+        offsetFormatted
     }
 }

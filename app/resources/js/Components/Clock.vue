@@ -6,27 +6,30 @@
     import { toast } from 'vue3-toastify';
     import 'vue3-toastify/dist/index.css';
 
-    import useCompanies from '@/Composables/userSettings'
+    import useSettings from '@/Composables/userSettings'
 
-    const { errors, userSetting, getUserSettings, storeUserSettings } = useCompanies();
+    const { errors, userSetting, getUserSettings, storeUserSettings, offsetFormatted, saveUserSetting } = useSettings();
 
     const time = ref(moment());
     const interval = ref(null);
 
     onMounted(async () => {
-        console.log('mounted');
+        console.log('mounted', userSetting.value.clock_offset);
 
         interval.value = setInterval(() => {
             //time.value = moment();
             time.value = moment().add(userSetting.value.clock_offset, 'seconds');
         }, 1000);
 
-        await getUserSettings();
+        if (userSetting.value.clock_offset === null) {
+            console.log('loading settings');
+            await getUserSettings();
 
-        if (errors.value.length > 0) {
-            notify(errors.value, 'error');
-        } else {
-            notify('Settings loaded!');
+            if (errors.value.length > 0) {
+                notify(errors.value, 'error');
+            } else {
+                notify('Settings loaded!');
+            }
         }
     });
 
@@ -45,41 +48,12 @@
         return time.value.format('ss');
     };
 
-    const offsetFormatted = () => {
-        let seconds = userSetting.value.clock_offset;
-        const hours = Math.floor(Math.abs(seconds) / 3600);
-        seconds %= 3600;
-        const minutes = Math.floor(Math.abs(seconds) / 60);
-        seconds %= 60;
-        seconds = Math.abs(seconds);
-
-        const formatted =  [hours, minutes, seconds]
-            .map(v => v < 10 ? "0" + v : v)
-            .join(":");
-
-        return userSetting.value.clock_offset < 0 ? "-" + formatted : formatted;
-    }
-
-    const saveUserSetting = debounce(async (val = null) => {
-        console.log('save');
-        await storeUserSettings({
-            //user_id: usePage().props.auth.user.id,
-            clock_offset: val === null ? userSetting.value.clock_offset : val
-        });
-
-        if (errors.value.length > 0) {
-            notify(errors.value, 'error');
-        } else {
-            notify('Settings saved!');
-        }
-    }, 1000);
-
-    const adjustOffset = (seconds) => {
+    const adjustOffset = async (seconds) => {
         console.log('adjust');
 
         userSetting.value.clock_offset += seconds;
 
-        saveUserSetting();
+        await saveUserSetting(null, notify);
     }
 
     const clearOffset = () => {
@@ -87,7 +61,7 @@
 
         userSetting.value.clock_offset = 0;
 
-        saveUserSetting(0);
+        saveUserSetting(0, notify);
     }
 
     const notify = (message, type = 'info') => {

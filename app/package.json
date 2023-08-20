@@ -24,6 +24,7 @@
     "dependencies": {
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
+        "pinia": "^2.1.6",
         "vue3-toastify": "^0.1.12"
     }
 }
