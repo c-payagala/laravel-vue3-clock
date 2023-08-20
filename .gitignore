@@ -20,3 +20,6 @@ yarn-error.log
 
 commands.md
 notes.md
+.DS_Store
+app/coverage
+
