@@ -95,27 +95,27 @@
 </script>
 
 <template>
-    <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-2">
+    <div class="flex justify-center items-center bg-gradient-to-br from-teal-600 to-teal-900 p-2">
         <h1 class="text-2xl text-white">Current Time Offset: {{ offsetFormatted() }}</h1>
-        <button class="m-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="saveUserSetting(0)">
+        <button id="reset" class="m-2 bg-gray-800 hover:bg-red-400 text-white font-bold py-1 px-2 rounded" @click="saveUserSetting(0)">
             Clear Offset
         </button>
     </div>
 
-    <div class="flex justify-center items-center bg-gradient-to-br from-indigo-600 to-indigo-900 p-20">
+    <div class="flex justify-center items-center bg-gradient-to-br from-teal-400 to-teal-800 p-20">
         <!-- flip clock container -->
-        <div class="relative border-8 border-yellow-100 rounded shadow-2xl font-mono text-9xl text-white grid grid-cols-3 gap-x-px">
+        <div class="relative border-8 border-teal-900 rounded shadow-2xl font-mono text-9xl text-white grid grid-cols-3 gap-x-px">
 
             <!-- hours -->
             <div class="relative bg-black p-8">
                 <!-- background grid of black squares -->
                 <div class="absolute inset-0 grid grid-rows-2">
-                    <div class="bg-gradient-to-br from-gray-800 to-black"></div>
-                    <div class="bg-gradient-to-br from-gray-700 to-black"></div>
+                    <div class="bg-gradient-to-b from-gray-600 to-white"></div>
+                    <div class="bg-gradient-to-t from-gray-600 to-white"></div>
                 </div>
 
                 <!-- time numbers -->
-                <span class="relative">{{ hours() }}</span>
+                <span class="relative text-black">{{ hours() }}</span>
 
                 <!-- line across the middle -->
                 <div class="absolute inset-0 flex items-center">
@@ -124,8 +124,8 @@
 
                 <!-- buttons to adjust offset -->
                 <div class="absolute inset-0 flex items-end">
-                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(60*60)">+</button>
-                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-60*60)">-</button>
+                    <button id="plus-hours" class="bg-black w-1/2 text-base hover:bg-gray-800 mr-0.5" @click="adjustOffset(60*60)">+</button>
+                    <button id="minus-hours" class="bg-black w-1/2 text-base hover:bg-gray-800 ml-0.5" @click="adjustOffset(-60*60)">-</button>
                 </div>
             </div>
 
@@ -133,11 +133,11 @@
             <div class="relative bg-black p-8">
                 <!-- background grid of black squares -->
                 <div class="absolute inset-0 grid grid-rows-2">
-                    <div class="bg-gradient-to-br from-gray-800 to-black"></div>
-                    <div class="bg-gradient-to-br from-gray-700 to-black"></div>
+                    <div class="bg-gradient-to-b from-gray-600 to-white"></div>
+                    <div class="bg-gradient-to-t from-gray-600 to-white"></div>
                 </div>
 
-                <span class="relative">{{ minutes() }}</span>
+                <span class="relative text-black">{{ minutes() }}</span>
 
                 <!-- line across the middle -->
                 <div class="absolute inset-0 flex items-center">
@@ -146,8 +146,8 @@
 
                 <!-- buttons to adjust offset -->
                 <div class="absolute inset-0 flex items-end">
-                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(60)">+</button>
-                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-60)">-</button>
+                    <button id="plus-minutes" class="bg-black w-1/2 text-base hover:bg-gray-800 mr-0.5" @click="adjustOffset(60)">+</button>
+                    <button id="minus-minutes" class="bg-black w-1/2 text-base hover:bg-gray-800 ml-0.5" @click="adjustOffset(-60)">-</button>
                 </div>
             </div>
 
@@ -155,11 +155,11 @@
             <div class="relative bg-black p-8">
                 <!-- background grid of black squares -->
                 <div class="absolute inset-0 grid grid-rows-2">
-                    <div class="bg-gradient-to-br from-gray-800 to-black"></div>
-                    <div class="bg-gradient-to-br from-gray-700 to-black"></div>
+                    <div class="bg-gradient-to-b from-gray-600 to-white"></div>
+                    <div class="bg-gradient-to-t from-gray-600 to-white"></div>
                 </div>
 
-                <span class="relative">{{ seconds() }}</span>
+                <span class="relative text-black">{{ seconds() }}</span>
 
                 <!-- line across the middle -->
                 <div class="absolute inset-0 flex items-center">
@@ -168,8 +168,8 @@
 
                 <!-- buttons to adjust offset -->
                 <div class="absolute inset-0 flex items-end">
-                    <button class="bg-blue-900 w-1/2 text-sm hover:bg-blue-400" @click="adjustOffset(1)">+</button>
-                    <button class="bg-red-900 w-1/2 text-sm hover:bg-red-400" @click="adjustOffset(-1)">-</button>
+                    <button id="plus-seconds" class="bg-black w-1/2 text-base hover:bg-gray-800 mr-0.5" @click="adjustOffset(1)">+</button>
+                    <button id="minus-seconds" class="bg-black w-1/2 text-base hover:bg-gray-800 ml-0.5" @click="adjustOffset(-1)">-</button>
                 </div>
             </div>
 
