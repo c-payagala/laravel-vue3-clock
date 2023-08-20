@@ -28,6 +28,7 @@
 1. Clone the repository
 2. Install docker and docker-compose
 3. Change directory to the project root e.g. `cd laravel-vue3-clock`
+4. Copy the `.env.example` file to `.env`. Run `cp .env.example .env`
 4. Run `docker-compose up -d`
 5. Navigate to http://localhost in your browser
 
