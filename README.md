@@ -27,7 +27,7 @@
 
 1. Clone the repository
 2. Install `docker` and `docker-compose`
-3. Install `Composer`
+3. Install `Composer` and `Node.js` (with `npm`)
 4. Change directory to the project root e.g. `cd laravel-vue3-clock`
 5. Run `make install` to install the dependencies
 6. Run `make up` to build and start the containers
