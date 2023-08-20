@@ -1,6 +1,7 @@
 <script setup>
     import {ref, onMounted, onUnmounted, watchEffect} from 'vue';
     import moment from 'moment';
+    import debounce from 'lodash/debounce';
     import { usePage } from '@inertiajs/vue3';
     import { toast } from 'vue3-toastify';
     import 'vue3-toastify/dist/index.css';
@@ -59,7 +60,7 @@
         return userSetting.value.clock_offset < 0 ? "-" + formatted : formatted;
     }
 
-    const saveUserSetting = async (val=null) => {
+    const saveUserSetting = debounce(async (val = null) => {
         console.log('save');
         await storeUserSettings({
             //user_id: usePage().props.auth.user.id,
@@ -71,17 +72,22 @@
         } else {
             notify('Settings saved!');
         }
-    }
+    }, 1000);
 
     const adjustOffset = (seconds) => {
         console.log('adjust');
 
         userSetting.value.clock_offset += seconds;
 
-        //await storeUserSettings({
-        //    //user_id: usePage().props.auth.user.id,
-        //    clock_offset: '60'
-        //});
+        saveUserSetting();
+    }
+
+    const clearOffset = () => {
+        console.log('clear');
+
+        userSetting.value.clock_offset = 0;
+
+        saveUserSetting(0);
     }
 
     const notify = (message, type = 'info') => {
@@ -97,7 +103,7 @@
 <template>
     <div class="flex justify-center items-center bg-gradient-to-br from-teal-600 to-teal-900 p-2">
         <h1 class="text-2xl text-white">Current Time Offset: {{ offsetFormatted() }}</h1>
-        <button id="reset" class="m-2 bg-gray-800 hover:bg-red-400 text-white font-bold py-1 px-2 rounded" @click="saveUserSetting(0)">
+        <button id="reset" class="m-2 bg-gray-800 hover:bg-red-400 text-white font-bold py-1 px-2 rounded" @click="clearOffset">
             Clear Offset
         </button>
     </div>
