@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('user_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->integer('clock_offset')->default('0');
             $table->timestamps();
 
-            $table->unique('user_id');
+            //$table->unique('user_id');
         });
     }
 
