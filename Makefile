@@ -3,7 +3,15 @@
 # Variables
 DC=docker-compose exec app
 
-.PHONY: test test-filter test-ui migrate migrate-refresh npm-install npm-install-dev npm-dev npm-build
+.PHONY: install test test-filter test-ui migrate migrate-refresh npm-install npm-install-dev npm-dev npm-build
+
+## Setup project
+install:
+	cd app && cp .env.example .env && composer install && npm i && npm run build
+
+## Bring up docker
+up:
+	docker-compose up -d && $(DC) php artisan migrate
 
 ## Run PHPUnit tests
 test:
