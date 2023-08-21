@@ -2,53 +2,71 @@
 
 # Variables
 DC=docker-compose exec app
+DR=docker-compose run --rm app
 
-.PHONY: install up down test test-filter test-ui migrate migrate-refresh npm-install npm-install-dev npm-dev npm-build
 
-## Setup project
-install:
-	cd app && cp .env.example .env && composer install && npm i && npm run build
+build: ## Build development environment
+	if ! [ -f app/.env ];then cp app/.env.example app/.env;fi
+	docker-compose build
+	$(DR) composer install
+	$(DR) php artisan key:generate
+	$(DR) php artisan migrate
+	$(DR) php artisan db:seed
+	$(DR) npm install
+	$(DR) npm run build
 
-## Bring up docker
-up:
+
+up: ## Bring up docker
 	docker-compose up -d
 
-## Bring down docker
-down:
+
+down: ## Bring down docker
 	docker-compose stop
 
-## Run PHPUnit tests
-test:
+
+test: ## Run PHPUnit tests
 	$(DC) php artisan test
 
-## Run PHPUnit tests with filter
-test-filter:
+
+test-filter: ## Run PHPUnit tests with filter
 	$(DC) php artisan test --filter=$(filter)
 
-## Run vitest tests
-test-ui:
+
+test-ui: ## Run vitest tests
 	$(DC) npm run test
 
-## Run migrations
-migrate:
+
+migrate: ## Run migrations
 	$(DC) php artisan migrate
 
-## Run migrations with refresh
-migrate-refresh:
+
+migrate-refresh: ## Run migrations with refresh
 	$(DC) php artisan migrate:refresh
 
-## Run npm install
-npm-install:
+
+npm-install: ## Run npm install
 	$(DC) npm install $(package)
 
-## Run npm install with dev
-npm-install-dev:
+
+npm-install-dev: ## Run npm install with dev
 	$(DC) npm install $(package) --save-dev
 
-## Run npm dev
-npm-dev:
+
+npm-dev: ## Run npm dev
 	$(DC) npm run dev
 
-## Run npm build
-npm-build:
+
+npm-build: ## Run npm build
 	$(DC) npm run build
+
+
+tinker: ## Run tinker
+	$(DC) php artisan tinker
+
+
+composer: ## Run composer install
+	$(DC) composer install
+
+.PHONY: help
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

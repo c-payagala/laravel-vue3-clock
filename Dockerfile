@@ -18,13 +18,13 @@ RUN apt-get install nodejs npm -y
 WORKDIR /app
 COPY ./app /app
 
-RUN composer install
-
-RUN composer require laravel/breeze --dev
-
-RUN npm install
-
-RUN npm run build
+#RUN composer install
+#
+#RUN composer require laravel/breeze --dev
+#
+#RUN npm install
+#
+#RUN npm run build
 
 EXPOSE 8000
 EXPOSE 5173
