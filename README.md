@@ -30,8 +30,9 @@
 3. Change directory to the project root e.g. `cd laravel-vue3-clock`
 4. Run `make build` to build the containers and install dependencies
 5. Run `make up` to build and start the containers
-6. All Set! Navigate to http://localhost in your browser
-7. Register as a new user and access the dashboard
+6. Run `make migrate` to run db migrations
+7. All Set! Navigate to http://localhost in your browser
+8. Register as a new user and access the dashboard
 
 #### Development
 

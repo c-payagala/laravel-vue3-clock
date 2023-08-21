@@ -10,8 +10,6 @@ build: ## Build development environment
 	docker-compose build
 	$(DR) composer install
 	$(DR) php artisan key:generate
-	$(DR) php artisan migrate
-	$(DR) php artisan db:seed
 	$(DR) npm install
 	$(DR) npm run build
 
@@ -38,6 +36,10 @@ test-ui: ## Run vitest tests
 
 migrate: ## Run migrations
 	$(DC) php artisan migrate
+
+
+seed: ## Run migrations
+	$(DC) php artisan db:seed
 
 
 migrate-refresh: ## Run migrations with refresh
