@@ -53,6 +53,7 @@
     const adjustOffset = async (seconds) => {
         console.log('adjust');
         userSetting.value.clock_offset += seconds;
+        time.value = moment().add(userSetting.value.clock_offset, 'seconds');
         emit('adjustOffset', userSetting.value.clock_offset);
         saveUserSetting(null, notify);
     }
