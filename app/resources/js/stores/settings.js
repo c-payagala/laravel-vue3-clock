@@ -28,7 +28,7 @@ export const useSettingsStore = defineStore({
                 console.log(response.data.data);
                 this.userSetting = response.data.data;
             } catch (e) {
-                if (e.response.status === 422) {
+                if (e.response && e.response.status === 422) {
                     for (const key in e.response.data.errors) {
                         this.errors = e.response.data.errors;
                     }

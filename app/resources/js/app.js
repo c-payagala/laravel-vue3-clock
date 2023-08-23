@@ -9,7 +9,7 @@ import { createPinia } from 'pinia'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Clock';
 
-const pinia = createPinia()
+const pinia = createPinia();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -25,3 +25,12 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+axios.interceptors.response.use((response) => {
+        console.log("interceptors", response);
+        return response;
+    },
+    error => {
+        console.log("interceptors", error);
+        throw error;
+    });
